@@ -7,10 +7,6 @@
 using namespace std;
 struct point
 {
-    point()
-    : point(0,0)
-    {}
-
     point (int64_t x, int64_t y)
     : x(x), y(y)
     {}
@@ -54,13 +50,28 @@ void parseInput(vector<point>& input)
 
 void print(const vector<point>& convexHullPoints)
 {
-    cout << convexHullPoints.size() - 1ull << '\n';
+    cout << convexHullPoints.size() - 1u << '\n';
     for (auto it = convexHullPoints.begin();
          it != prev(convexHullPoints.end());
          ++it)
     {
         cout << it->x << ' ' << it->y << '\n';
     }
+}
+
+void tryNewPoint(vector<point>& convexHullPoints, const point& p,
+                 size_t threshold)
+{
+    while (convexHullPoints.size() >= threshold)
+    {
+        const auto last = prev(convexHullPoints.end());
+        const auto secondLast = prev(last);
+        if (rightOf(*secondLast, *last, p))
+            convexHullPoints.pop_back();
+        else
+            break;
+    }
+    convexHullPoints.push_back(p);
 }
 
 void solveTestcase()
@@ -72,43 +83,17 @@ void solveTestcase()
     vector<point> convexHullPoints;
     for (const auto& p : input)
     {
-        while (convexHullPoints.size() >= 2)
-        {
-            const auto last = prev(convexHullPoints.end());
-            const auto secondLast = prev(last);
-            if (rightOf(*secondLast, *last, p))
-            {
-                convexHullPoints.pop_back();
-            }
-            else
-            {
-                break;
-            }
-        }
-        convexHullPoints.push_back(p);
+        tryNewPoint(convexHullPoints, p, 2u);
     }
 
     // visiting (almost) all points in reverse to build upper.
     // last point (n-1) is already in.
     // The threshold hits in after we inserted the first point.
     // That point may be wrong already.
-    const size_t lowerThreshold = convexHullPoints.size() + 1;
+    const size_t threshold = convexHullPoints.size() + 1;
     for (int i = input.size() - 2; i >=0; --i)
     {
-        while (convexHullPoints.size() >= lowerThreshold)
-        {
-            const auto last = prev(convexHullPoints.end());
-            const auto secondLast = prev(last);
-            if (rightOf(*secondLast, *last, input[i]))
-            {
-                convexHullPoints.pop_back();
-            }
-            else
-            {
-                break;
-            }
-        }
-        convexHullPoints.push_back(input[i]);
+        tryNewPoint(convexHullPoints, input[i], threshold);
     }
 
     print(convexHullPoints);
