@@ -4,7 +4,8 @@
 
 using namespace std;
 
-// This is a linear time solution instead of the obvious O(n*log(n)) solution
+// This is a linear time solution instead of the obvious O(n*log(n))
+//solution. (If sorting happens in O(n).)
 int main()
 {
     cin.tie(nullptr);
