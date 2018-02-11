@@ -12,27 +12,27 @@ public:
 	: numColumns_(numColumns)
 	, data_(numRows * numColumns, 0u)
 	{}
-	
+
 	int& at(size_t rowPos, size_t columnPos)
 	{
 		return data_[rowPos * numColumns_ + columnPos];
 	}
-	
+
 	int at(size_t rowPos, size_t columnPos) const
 	{
 		return data_[rowPos * numColumns_ + columnPos];
 	}
-	
+
 	size_t getNumRows() const
 	{
 		return data_.size() / numColumns_;
 	}
-	
+
 	size_t getNumColumns() const
 	{
 		return numColumns_;
 	}
-	
+
 private:
 	size_t numColumns_;
 	vector<int> data_;
@@ -44,14 +44,14 @@ public:
 	explicit Graph(size_t numNodes)
 	: capacityMatrix_(numNodes, numNodes)
 	{}
-	
+
 	void addUndirectedCapacity(size_t a, size_t b, int capacity)
 	{
 		// There may be more than one edge...
-		capacityMatrix_.at(a, b) += capacity; 
+		capacityMatrix_.at(a, b) += capacity;
 		capacityMatrix_.at(b, a) += capacity;
 	}
-	
+
 	int findMaxFlow(size_t s, size_t t)
 	{
 		Matrix flowMatrix(getNumNodes(), getNumNodes());
@@ -68,7 +68,7 @@ public:
 				const int flow = flowMatrix.at(stPathPred[curr], curr);
 				maxNewFlow = min(maxNewFlow, capacity - flow);
 			}
-			
+
 			for (size_t curr = t; curr != stPathPred[curr]; curr = stPathPred[curr])
 			{
 				flowMatrix.at(stPathPred[curr], curr) += maxNewFlow;
@@ -76,18 +76,18 @@ public:
 			}
 		}
 	}
-	
+
 private:
 	size_t getNumNodes() const
 	{
 		return capacityMatrix_.getNumColumns();
 	}
-	
+
 	vector<size_t> findPath(size_t start, size_t end, const Matrix& flowMatrix)
 	{
 		vector<size_t> pred(getNumNodes(), numeric_limits<size_t>::max());
 		pred[start] = start;
-		
+
 		queue<size_t> q;
 		q.push(start);
 
@@ -99,7 +99,7 @@ private:
 			{
 				if (pred[i] != numeric_limits<size_t>::max())
 					continue;
-					
+
 				const int capacity = capacityMatrix_.at(thisNode, i);
 				const int flow = flowMatrix.at(thisNode, i);
 				if (flow < capacity)
@@ -111,7 +111,7 @@ private:
 		}
 		return pred;
 	}
-	
+
 	static int calculateResult(size_t t, Matrix& flowMatrix)
 	{
 		int flow = 0;
@@ -121,13 +121,16 @@ private:
 		}
 		return flow;
 	}
-	
+
 private:
 	Matrix capacityMatrix_;
 };
 
 int main()
 {
+    cin.tie(nullptr);
+    ios::sync_with_stdio(false);
+
 	size_t networkNumber = 0;
 	size_t n;
 	while (cin >> n && n != 0)
@@ -146,6 +149,6 @@ int main()
 		cout << "Network " << networkNumber << '\n';
 		cout << "The bandwidth is " << g.findMaxFlow(s - 1 , t - 1) << ".\n\n";
 	}
-	
+
 return 0;
 }
