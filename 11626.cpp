@@ -1,19 +1,17 @@
-#include <iostream>
-#include <vector>
 #include <algorithm>
-#include <iterator>
 #include <cstdint>
+#include <iostream>
+#include <iterator>
+#include <vector>
 
 using namespace std;
 struct point
 {
-    point (int64_t x, int64_t y)
-    : x(x), y(y)
-    {}
+    point(int64_t x, int64_t y) : x(x), y(y) {}
 
-    bool operator < (const point& other) const
+    bool operator<(const point& other) const
     {
-        if ( x != other.x)
+        if (x != other.x)
             return x < other.x;
         return y < other.y;
     }
@@ -28,8 +26,7 @@ inline bool rightOf(const point& a, const point& b, const point& c)
     // This logic is derived from the three dimensional cross product.
     // Basically your thump is (a,b), your index finger is (b,c), so
     // your middle finger should point downwards.
-    const int64_t z = (b.x - a.x) * (c.y - a.y)
-                      - (c.x - a.x) * (b.y - a.y);
+    const int64_t z = (b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y);
     return z < 0;
 }
 
@@ -42,25 +39,26 @@ void parseInput(vector<point>& input)
     {
         int x, y;
         char isOn;
-        cin >> x  >> y >> isOn;
+        cin >> x >> y >> isOn;
         if (isOn == 'Y')
-            input.push_back(point(x,y));
+            input.push_back(point(x, y));
     }
 }
 
 void print(const vector<point>& convexHullPoints)
 {
     cout << convexHullPoints.size() - 1u << '\n';
-    for (auto it = convexHullPoints.begin();
-         it != prev(convexHullPoints.end());
+    for (auto it = convexHullPoints.begin(); it != prev(convexHullPoints.end());
          ++it)
     {
         cout << it->x << ' ' << it->y << '\n';
     }
 }
 
-void tryNewPoint(vector<point>& convexHullPoints, const point& p,
-                 size_t threshold)
+void tryNewPoint(
+    vector<point>& convexHullPoints,
+    const point& p,
+    size_t threshold)
 {
     while (convexHullPoints.size() >= threshold)
     {
@@ -91,7 +89,7 @@ void solveTestcase()
     // The threshold hits in after we inserted the first point.
     // That point may be wrong already.
     const size_t threshold = convexHullPoints.size() + 1;
-    for (int i = input.size() - 2; i >=0; --i)
+    for (int i = input.size() - 2; i >= 0; --i)
     {
         tryNewPoint(convexHullPoints, input[i], threshold);
     }

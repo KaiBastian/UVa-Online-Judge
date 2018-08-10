@@ -1,11 +1,11 @@
+#include <algorithm>
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
 // This is a linear time solution instead of the obvious O(n*log(n))
-//solution. (If sorting happens in O(n).)
+// solution. (If sorting happens in O(n).)
 int main()
 {
     cin.tie(nullptr);
@@ -50,9 +50,9 @@ int main()
                 --upper;
         }
 
-        cout << "Peter should buy books whose prices are "
-             << books[bestLower] << " and " << books[bestUpper] << ".\n\n";
+        cout << "Peter should buy books whose prices are " << books[bestLower]
+             << " and " << books[bestUpper] << ".\n\n";
     }
 
-return 0;
+    return 0;
 }

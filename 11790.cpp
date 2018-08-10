@@ -1,4 +1,3 @@
-#include <iostream>
 #include <algorithm>
 #include <iostream>
 #include <iterator>
@@ -7,7 +6,7 @@
 
 using namespace std;
 
-template <typename sequence_order>
+template<typename sequence_order>
 class optimal_sequence
 {
     using sequence_type = map<unsigned, unsigned, sequence_order>;
@@ -56,15 +55,11 @@ public:
 
         const typename sequence_type::key_type newWidth =
             prev_e->second + width;
-        sequence_endings.insert(
-            next(prev_e), make_pair(height, newWidth));
+        sequence_endings.insert(next(prev_e), make_pair(height, newWidth));
         restore_property(next(prev_e));
     }
 
-    unsigned best_width() const
-    {
-        return sequence_endings.rbegin()->second;
-    }
+    unsigned best_width() const { return sequence_endings.rbegin()->second; }
 
 private:
     // This assumes we alread know that there is no element with key
@@ -142,18 +137,15 @@ void solveCase(unsigned caseNumber)
     }
 
     cout << "Case " << caseNumber << ". ";
-    if (decreasing_sequence.best_width() <=
-        increasing_sequence.best_width())
+    if (decreasing_sequence.best_width() <= increasing_sequence.best_width())
     {
         cout << "Increasing (" << increasing_sequence.best_width()
-        << "). Decreasing (" << decreasing_sequence.best_width()
-        << ").";
+             << "). Decreasing (" << decreasing_sequence.best_width() << ").";
     }
     else
     {
         cout << "Decreasing (" << decreasing_sequence.best_width()
-        << "). Increasing (" << increasing_sequence.best_width()
-        << ").";
+             << "). Increasing (" << increasing_sequence.best_width() << ").";
     }
     cout << '\n';
 }

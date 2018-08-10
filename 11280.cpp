@@ -1,19 +1,16 @@
+#include <algorithm>
 #include <iostream>
+#include <limits>
 #include <string>
 #include <unordered_map>
-#include <limits>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
 class Graph
 {
 public:
-    Graph(size_t nodeCount)
-    : adjList_(nodeCount)
-    {
-    }
+    Graph(size_t nodeCount) : adjList_(nodeCount) {}
 
     void addDirectedEdge(size_t from, size_t to, size_t weight)
     {
@@ -24,15 +21,12 @@ public:
     {
     public:
         BellmanFordState(size_t nodeCount)
-        : distance_(nodeCount, numeric_limits<size_t>::max())
+            : distance_(nodeCount, numeric_limits<size_t>::max())
         {
             distance_[0] = 0;
         }
 
-        size_t getLastDistance() const
-        {
-            return distance_.back();
-        }
+        size_t getLastDistance() const { return distance_.back(); }
 
     private:
         vector<size_t> distance_;
@@ -45,13 +39,11 @@ public:
         BellmanFordState newState(oldState);
         for (size_t source = 0; source < adjList_.size(); ++source)
         {
-            if (oldState.distance_[source] ==
-                    numeric_limits<size_t>::max())
+            if (oldState.distance_[source] == numeric_limits<size_t>::max())
                 continue;
             for (const Edge e : adjList_[source])
             {
-                const size_t newCost =
-                    oldState.distance_[source] + e.weight;
+                const size_t newCost = oldState.distance_[source] + e.weight;
                 if (newState.distance_[e.target] > newCost)
                 {
                     newState.distance_[e.target] = newCost;
@@ -64,10 +56,7 @@ public:
 private:
     struct Edge
     {
-        Edge(size_t target, size_t weight)
-        : target(target)
-        , weight(weight)
-        {}
+        Edge(size_t target, size_t weight) : target(target), weight(weight) {}
 
         size_t target;
         size_t weight;
@@ -101,9 +90,8 @@ void setupEdges(Graph& g, const unordered_map<string, size_t>& cityMap)
         string from, to;
         size_t weight;
         cin >> from >> to >> weight;
-        g.addDirectedEdge(cityMap.find(from)->second,
-            cityMap.find(to)->second,
-        weight);
+        g.addDirectedEdge(
+            cityMap.find(from)->second, cityMap.find(to)->second, weight);
     }
 }
 
@@ -150,8 +138,7 @@ int main()
             if (answers[q] == numeric_limits<size_t>::max())
                 cout << "No satisfactory flights\n";
             else
-                cout << "Total cost of flight(s) is $" << answers[q]
-                     << '\n';
+                cout << "Total cost of flight(s) is $" << answers[q] << '\n';
         }
     }
 
