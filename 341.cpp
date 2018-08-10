@@ -21,8 +21,8 @@ using StoredType = std::pair<ValueType, PrioType>;
 	
 private:
 using HeapLocationType = unsigned;
-	HeapLocationType lastElement();
-	HeapLocationType firstElement();
+	HeapLocationType lastElementPos();
+	HeapLocationType firstElementPos();
 	void swap(HeapLocationType, HeapLocationType);
 	void bubbleUp(HeapLocationType);
 	void bubbleDown(HeapLocationType);
@@ -44,7 +44,7 @@ template<typename ValueType>
 void PriorityQueue<ValueType>::push(StoredType element)
 {
 	heap_.push_back(element);
-	const auto newElementPos = lastElement();
+	const auto newElementPos = lastElementPos();
 	value2Pos_.insert(std::make_pair(element.first, newElementPos));
 	bubbleUp(newElementPos);
 }
@@ -55,10 +55,10 @@ void PriorityQueue<ValueType>::pop()
 	if (heap_.empty())
 		return;
 		
-	const auto lastPos = lastElement();
-	swap(firstElement(), lastPos);
+	const auto lastPos = lastElementPos();
+	swap(firstElementPos(), lastPos);
 	heap_.pop_back();
-	bubbleDown(firstElement());
+	bubbleDown(firstElementPos());
 }
 
 template<typename ValueType>
@@ -68,7 +68,7 @@ PriorityQueue<ValueType>::top()
 	if (heap_.empty())
 		return std::make_pair(ValueType(), PrioType());
 	
-	return heap_[firstElement()];		
+	return heap_[firstElementPos()];
 }
 
 template<typename ValueType>
@@ -99,14 +99,14 @@ PriorityQueue<ValueType>::getPrio(ValueType elem)
 
 template<typename ValueType>
 typename PriorityQueue<ValueType>::HeapLocationType 
-PriorityQueue<ValueType>::lastElement()
+PriorityQueue<ValueType>::lastElementPos()
 {
 	return static_cast<HeapLocationType>(heap_.size() - 1);
 }
 
 template<typename ValueType>
 typename PriorityQueue<ValueType>::HeapLocationType 
-PriorityQueue<ValueType>::firstElement()
+PriorityQueue<ValueType>::firstElementPos()
 {
 	HeapLocationType first {1};
 	return first;
@@ -144,7 +144,7 @@ template<typename ValueType>
 void PriorityQueue<ValueType>::bubbleDown(HeapLocationType start)
 {
 	for (HeapLocationType current = start, smallerChild = getSmallerChild(start);
-		 smallerChild < lastElement();
+		 smallerChild < lastElementPos();
 		 current = smallerChild, smallerChild = getSmallerChild(smallerChild))
 	{
 		const PrioType currentPrio = heap_[current].second;
@@ -174,6 +174,9 @@ PriorityQueue<ValueType>::getSmallerChild(HeapLocationType element)
 	// i has children i*2 and i*2 + 1 beause we to index starting w/1.
 	const HeapLocationType left = element*2;
 	const HeapLocationType right = element*2 + 1;
+	const bool hasTwoChildren = right < lastElementPos();
+	if (!hasTwoChildren)
+		return left; // dummy return, must be checked
 	const PrioType leftPrio = heap_[left].second;
 	const PrioType rightPrio = heap_[right].second;
 	if (leftPrio < rightPrio)
